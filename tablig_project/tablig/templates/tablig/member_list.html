@@ -1,0 +1,132 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}মসুল্লি তালিকা - TabligApp{% endblock %}
+{% block header_title %}সদস্য ব্যবস্থাপনা{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'member_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> নতুন সদস্য যোগ করুন
+</a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .status-active {
+        background-color: #DCFCE7;
+        color: #166534;
+    }
+    .status-inactive {
+        background-color: #FEE2E2;
+        color: #991B1B;
+    }
+    .member-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+    .member-table th {
+        text-align: left;
+        padding: 1rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .member-table tr {
+        transition: var(--transition);
+    }
+    .member-table td {
+        padding: 1.2rem 1rem;
+        background: var(--white);
+        border-top: 1px solid #f1f5f9;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .member-table td:first-child {
+        border-left: 1px solid #f1f5f9;
+        border-top-left-radius: var(--radius);
+        border-bottom-left-radius: var(--radius);
+    }
+    .member-table td:last-child {
+        border-right: 1px solid #f1f5f9;
+        border-top-right-radius: var(--radius);
+        border-bottom-right-radius: var(--radius);
+    }
+    .member-table tr:hover td {
+        background: #fcfdfc;
+        border-color: #dcfce7;
+    }
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-light);
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+    .name-col {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <table class="member-table">
+        <thead>
+            <tr>
+                <th>নাম</th>
+                <th>ফোন নাম্বার</th>
+                <th>এলাকা (হালকা)</th>
+                <th>অবস্থা</th>
+                <th>যোগদানের তারিখ</th>
+                <th>অ্যাকশন</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>
+                    <div class="name-col">
+                        <div class="avatar">{{ member.name|slice:":1"|upper }}</div>
+                        <div>
+                            <div style="font-weight: 600;">{{ member.name }}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ member.address|default:"ঠিকানা নেই" }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ member.phone_number }}</td>
+                <td>{{ member.area.name|default:"-" }}</td>
+                <td>
+                    <span class="status-badge status-{{ member.status }}">
+                        {{ member.get_status_display }}
+                    </span>
+                </td>
+                <td>{{ member.created_at|date:"d M Y" }}</td>
+                <td>
+                    <button class="btn" style="padding: 5px 10px; color: var(--text-muted);"><i class="fas fa-edit"></i></button>
+                    <button class="btn" style="padding: 5px 10px; color: #ef4444;"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <i class="fas fa-user-slash" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                    কোন সদস্য পাওয়া যায়নি। নতুন সদস্য যোগ করুন।
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

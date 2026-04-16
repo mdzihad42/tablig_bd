@@ -1,0 +1,94 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}নতুন গাশত - TabligApp{% endblock %}
+{% block header_title %}গাশতের বিবরণ যোগ করুন{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container { max-width: 800px; margin: 0 auto; }
+    .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group.full { grid-column: span 2; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: var(--text-muted); }
+    .form-control { width: 100%; padding: 12px 16px; border-radius: var(--radius); border: 1px solid #e2e8f0; font-size: 1rem; }
+    .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px var(--primary-light); }
+    .multi-select { height: 150px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid-form">
+                <div class="form-group">
+                    <label>তারিখ</label>
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>গাশতের ধরন</label>
+                    <select name="gasht_type" class="form-control" required>
+                        {% for value, label in form.gasht_type.field.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>এলাকা</label>
+                    <select name="area" class="form-control" required>
+                        <option value="">নির্বাচন করুন</option>
+                        {% for area in form.area.field.queryset %}
+                            <option value="{{ area.id }}">{{ area.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>আমীর সাথী</label>
+                    <select name="amir" class="form-control">
+                        <option value="">নির্বাচন করুন</option>
+                        {% for member in form.amir.field.queryset %}
+                            <option value="{{ member.id }}">{{ member.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>রাহবার</label>
+                    <select name="rahbar" class="form-control">
+                        <option value="">নির্বাচন করুন</option>
+                        {% for member in form.rahbar.field.queryset %}
+                            <option value="{{ member.id }}">{{ member.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>মুতাকাল্লিম</label>
+                    <select name="mutakallim" class="form-control">
+                        <option value="">নির্বাচন করুন</option>
+                        {% for member in form.mutakallim.field.queryset %}
+                            <option value="{{ member.id }}">{{ member.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>অংশগ্রহণকারী সাথীবৃন্দ (একাধিক সিলেক্ট করতে Ctrl চেপে ক্লিক করুন)</label>
+                    <select name="participants" class="form-control multi-select" multiple>
+                        {% for member in form.participants.field.queryset %}
+                            <option value="{{ member.id }}">{{ member.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>মন্তব্য ও বিশেষ ঘটনা (যদি থাকে)</label>
+                    <textarea name="remarks" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">সেভ করুন</button>
+                <a href="{% url 'gasht_list' %}" class="btn" style="background: #f1f5f9; flex: 1; justify-content: center;">বাতিল</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

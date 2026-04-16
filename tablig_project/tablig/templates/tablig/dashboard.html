@@ -1,0 +1,134 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}Dashboard - TabligApp{% endblock %}
+{% block header_title %}ড্যাশবোর্ড{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+    .stat-card {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        border: 1px solid #f1f5f9;
+        transition: var(--transition);
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-light);
+    }
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .icon-members { background: #E0F2FE; color: #0369A1; }
+    .icon-areas { background: #FEF3C7; color: #B45309; }
+    .icon-gashts { background: #DCFCE7; color: #166534; }
+    
+    .stat-info h3 {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+    .stat-info div {
+        font-size: 1.75rem;
+        font-weight: 700;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .recent-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+    }
+    .recent-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .recent-item:last-child { border-bottom: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon icon-members"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+            <h3>মোট সদস্য</h3>
+            <div>{{ total_members }}</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-areas"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="stat-info">
+            <h3>মোট এলাকা</h3>
+            <div>{{ total_areas }}</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-gashts"><i class="fas fa-walking"></i></div>
+        <div class="stat-info">
+            <h3>মোট গাশত</h3>
+            <div>{{ total_gashts }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-grid">
+    <div class="card">
+        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">সাম্প্রতিক সদস্য</h2>
+        {% for member in recent_members %}
+        <div class="recent-item">
+            <div class="avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">{{ member.name|slice:":1"|upper }}</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600; font-size: 0.95rem;">{{ member.name }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">{{ member.area.name }}</div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ member.created_at|timesince }} আগে</div>
+        </div>
+        {% empty %}
+        <p style="color: var(--text-muted); text-align: center; padding: 1rem;">কোন তথ্য নেই</p>
+        {% endfor %}
+        <a href="{% url 'member_list' %}" style="display: block; text-align: center; margin-top: 1rem; color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.9rem;">সব দেখুন</a>
+    </div>
+
+    <div class="card">
+        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">সাম্প্রতিক গাশত</h2>
+        {% for gasht in recent_gashts %}
+        <div class="recent-item">
+            <div class="stat-icon icon-gashts" style="width: 36px; height: 36px; font-size: 0.9rem;"><i class="fas fa-walking"></i></div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600; font-size: 0.95rem;">{{ gasht.get_gasht_type_display }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">{{ gasht.area.name }}</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 0.85rem; font-weight: 500;">{{ gasht.date|date:"d M" }}</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ gasht.amir.name|slice:":10" }}...</div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="color: var(--text-muted); text-align: center; padding: 1rem;">কোন তথ্য নেই</p>
+        {% endfor %}
+        <a href="{% url 'gasht_list' %}" style="display: block; text-align: center; margin-top: 1rem; color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.9rem;">সব দেখুন</a>
+    </div>
+</div>
+{% endblock %}
