@@ -1,0 +1,43 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}তালিম রেকর্ড - TabligApp{% endblock %}
+{% block header_title %}তালিম ব্যবস্থাপনা{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'talim_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> নতুন তালিম এন্ট্রি
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <table class="member-table">
+        <thead>
+            <tr>
+                <th>তারিখ</th>
+                <th>কিতাবের নাম</th>
+                <th>বিষয়</th>
+                <th>তালীমকারী</th>
+                <th>উপস্থিতি</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for talim in talims %}
+            <tr>
+                <td>{{ talim.date|date:"d M Y" }}</td>
+                <td style="font-weight: 600;">{{ talim.book_name }}</td>
+                <td>{{ talim.topic|default:"-" }}</td>
+                <td>{{ talim.performed_by.name|default:"-" }}</td>
+                <td>{{ talim.participants.count }} জন</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    এখনো কোনো তালিমের রেকর্ড নেই।
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

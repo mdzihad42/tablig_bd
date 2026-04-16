@@ -1,0 +1,56 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}নতুন জামাত - TabligApp{% endblock %}
+{% block header_title %}জামাতের বিবরণ যোগ করুন{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">সাথী নির্বাচন করুন</label>
+                <select name="member" class="form-control" required>
+                    <option value="">নির্বাচন করুন</option>
+                    {% for member in form.member.field.queryset %}
+                        <option value="{{ member.id }}">{{ member.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">জামাতের ধরণ</label>
+                <select name="jamat_type" class="form-control" required>
+                    {% for value, label in form.jamat_type.field.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">শুরুর তারিখ</label>
+                <input type="date" name="start_date" class="form-control" required>
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">সম্ভাব্য শেষের তারিখ (ঐচ্ছিক)</label>
+                <input type="date" name="end_date" class="form-control">
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">অবস্থান/এলাকা</label>
+                <input type="text" name="location" class="form-control" placeholder="যেমন: চট্টগ্রাম মারকাজ">
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">অবস্থা</label>
+                <select name="status" class="form-control">
+                    <option value="ongoing">চলমান (Ongoing)</option>
+                    <option value="completed">সম্পন্ন (Completed)</option>
+                    <option value="cancelled">বাতিল (Cancelled)</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">সেভ করুন</button>
+                <a href="{% url 'jamat_list' %}" class="btn" style="background: #f1f5f9; flex: 1; justify-content: center;">বাতিল</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

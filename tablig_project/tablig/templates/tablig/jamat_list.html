@@ -1,0 +1,49 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}জামাত ট্র্যাকার - TabligApp{% endblock %}
+{% block header_title %}চিল্লা ও জামাত ব্যবস্থাপনা{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'jamat_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> নতুন জামাত এন্ট্রি
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <table class="member-table">
+        <thead>
+            <tr>
+                <th>সাথীর নাম</th>
+                <th>জামাতের ধরণ</th>
+                <th>শুরু</th>
+                <th>শেষ</th>
+                <th>অবস্থান</th>
+                <th>অবস্থা</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for jamat in jamats %}
+            <tr>
+                <td style="font-weight: 600;">{{ jamat.member.name }}</td>
+                <td>{{ jamat.get_jamat_type_display }}</td>
+                <td>{{ jamat.start_date|date:"d M Y" }}</td>
+                <td>{{ jamat.end_date|date:"d M Y"|default:"-" }}</td>
+                <td>{{ jamat.location|default:"-" }}</td>
+                <td>
+                    <span class="status-badge {% if jamat.status == 'ongoing' %}status-active{% else %}status-inactive{% endif %}">
+                        {{ jamat.status }}
+                    </span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    এখনো কোনো জামাতের রেকর্ড নেই।
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

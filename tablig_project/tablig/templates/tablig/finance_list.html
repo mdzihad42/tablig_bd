@@ -1,0 +1,56 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}তহবিল ও খরচ - TabligApp{% endblock %}
+{% block header_title %}তহবিল ব্যবস্থাপনা{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'finance_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> আয়/ব্যয় এন্ট্রি
+</a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .amount-income { color: #166534; font-weight: 700; }
+    .amount-expense { color: #991B1B; font-weight: 700; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <table class="member-table">
+        <thead>
+            <tr>
+                <th>তারিখ</th>
+                <th>ধরণ</th>
+                <th>বিভাগ</th>
+                <th>পরিমান</th>
+                <th>মন্তব্য</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in finances %}
+            <tr>
+                <td>{{ record.date|date:"d M Y" }}</td>
+                <td>
+                    <span class="status-badge {% if record.type == 'income' %}status-active{% else %}status-inactive{% endif %}">
+                        {{ record.get_type_display }}
+                    </span>
+                </td>
+                <td>{{ record.category }}</td>
+                <td class="amount-{{ record.type }}">
+                    {% if record.type == 'income' %}+{% else %}-{% endif %} {{ record.amount }} ৳
+                </td>
+                <td>{{ record.description|truncatechars:30 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    এখনো কোনো লেনদেনের রেকর্ড নেই।
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

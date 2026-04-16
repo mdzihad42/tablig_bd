@@ -1,0 +1,61 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}নতুন তালিম - TabligApp{% endblock %}
+{% block header_title %}তালিমের বিবরণ যোগ করুন{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container { max-width: 800px; margin: 0 auto; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-control { width: 100%; padding: 12px 16px; border-radius: var(--radius); border: 1px solid #e2e8f0; }
+    .multi-select { height: 150px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>তারিখ</label>
+                <input type="date" name="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>কিতাবের নাম</label>
+                <input type="text" name="book_name" class="form-control" placeholder="যেমন: ফাযায়েলে আমল" required>
+            </div>
+            <div class="form-group">
+                <label>বিষয় / অধ্যায়</label>
+                <input type="text" name="topic" class="form-control" placeholder="যেমন: নামাজের গুরুত্ব">
+            </div>
+            <div class="form-group">
+                <label>তালীম করেছেন কে?</label>
+                <select name="performed_by" class="form-control">
+                    <option value="">নির্বাচন করুন</option>
+                    {% for member in form.performed_by.field.queryset %}
+                        <option value="{{ member.id }}">{{ member.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>উপস্থিত সাথীবৃন্দ (Ctrl চেপে একাধিক সিলেক্ট করুন)</label>
+                <select name="participants" class="form-control multi-select" multiple>
+                    {% for member in form.participants.field.queryset %}
+                        <option value="{{ member.id }}">{{ member.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>মন্তব্য</label>
+                <textarea name="notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">সেভ করুন</button>
+                <a href="{% url 'talim_list' %}" class="btn" style="background: #f1f5f9; flex: 1; justify-content: center;">বাতিল</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

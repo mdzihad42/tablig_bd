@@ -196,26 +196,20 @@
                         <span>গাশত ট্র্যাকার</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#">
-                        <i class="fas fa-walking"></i>
-                        <span>গাশত</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">
+                <li class="nav-item {% if 'jamat' in request.path %}active{% endif %}">
+                    <a href="{% url 'jamat_list' %}">
                         <i class="fas fa-calendar-alt"></i>
                         <span>চিল্লা / জামাত</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#">
+                <li class="nav-item {% if 'talim' in request.path %}active{% endif %}">
+                    <a href="{% url 'talim_list' %}">
                         <i class="fas fa-book-open"></i>
                         <span>তালিম</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#">
+                <li class="nav-item {% if 'finance' in request.path %}active{% endif %}">
+                    <a href="{% url 'finance_list' %}">
                         <i class="fas fa-hand-holding-heart"></i>
                         <span>চাঁদা / ফান্ড</span>
                     </a>
