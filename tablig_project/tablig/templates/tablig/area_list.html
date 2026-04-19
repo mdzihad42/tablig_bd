@@ -10,29 +10,38 @@
 {% endblock %}
 
 {% block content %}
-<div class="card" style="max-width: 800px;">
-    <table class="member-table">
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table class="member-table" style="margin: 0; border-spacing: 0;">
         <thead>
-            <tr>
-                <th>নাম</th>
-                <th>বিবরণ</th>
-                <th>সদস্য সংখ্যা</th>
-                <th>অ্যাকশন</th>
+            <tr style="background: #f8fafc;">
+                <th style="padding: 1.2rem;">নাম</th>
+                <th style="padding: 1.2rem;">বিবরণ</th>
+                <th style="padding: 1.2rem;">সদস্য সংখ্যা</th>
+                <th style="padding: 1.2rem; text-align: right;">অ্যাকশন</th>
             </tr>
         </thead>
         <tbody>
             {% for area in areas %}
-            <tr>
-                <td style="font-weight: 600;">{{ area.name }}</td>
-                <td>{{ area.description|default:"-" }}</td>
-                <td>{{ area.members.count }}</td>
-                <td>
-                    <button class="btn" style="padding: 5px 10px; color: var(--text-muted);"><i class="fas fa-edit"></i></button>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 1rem; font-weight: 600; color: var(--primary-color);">{{ area.name }}</td>
+                <td style="padding: 1rem; color: var(--text-muted);">{{ area.description|default:"-"|truncatechars:50 }}</td>
+                <td style="padding: 1rem;">
+                    <span style="background: var(--primary-light); color: var(--primary-color); padding: 4px 10px; border-radius: 12px; font-weight: 600;">
+                        {{ area.members.count }}
+                    </span>
+                </td>
+                <td style="padding: 1rem; text-align: right;">
+                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="{% url 'area_detail' area.pk %}" class="btn" style="padding: 6px 10px; background: #f1f5f9; color: var(--primary-color);" title="দেখুন"><i class="fas fa-eye"></i></a>
+                        <a href="{% url 'area_update' area.pk %}" class="btn" style="padding: 6px 10px; background: #fffbeb; color: #b45309;" title="এডিট"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'area_delete' area.pk %}" class="btn" style="padding: 6px 10px; background: #fef2f2; color: #dc2626;" title="ডিলিট"><i class="fas fa-trash"></i></a>
+                    </div>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                <td colspan="4" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                    <i class="fas fa-map-marked-alt" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.2;"></i>
                     কোন এলাকা পাওয়া যায়নি।
                 </td>
             </tr>

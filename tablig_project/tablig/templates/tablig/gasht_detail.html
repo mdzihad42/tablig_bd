@@ -1,0 +1,83 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}গাশত বিস্তারিত - TabligApp{% endblock %}
+{% block header_title %}গাশত রিপোর্ট{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'gasht_update' gasht.pk %}" class="btn btn-primary" style="background: var(--accent-color); color: #1e293b;">
+    <i class="fas fa-edit"></i> Edit Report
+</a>
+<a href="{% url 'gasht_delete' gasht.pk %}" class="btn" style="background: #fee2e2; color: #dc2626;">
+    <i class="fas fa-trash"></i> Delete
+</a>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem;">
+    <!-- Main Info -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1.5rem;">
+            <div>
+                <h2 style="font-family: 'Outfit'; margin-bottom: 0.5rem;">{{ gasht.get_gasht_type_display }}</h2>
+                <div style="color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-calendar-alt"></i> {{ gasht.date|date:"l, d F Y" }}
+                    <span style="color: #e2e8f0;">|</span>
+                    <i class="fas fa-map-marker-alt"></i> {{ gasht.area.name }}
+                </div>
+            </div>
+            <div style="background: var(--primary-light); color: var(--primary-color); padding: 12px 20px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700;">অংশগ্রহণকারী</div>
+                <div style="font-size: 1.5rem; font-weight: 800; font-family: 'Outfit';">{{ gasht.participants.count|add:3 }} জন</div>
+            </div>
+        </div>
+
+        <h3 style="font-family: 'Outfit'; font-size: 1.1rem; margin-bottom: 1rem;">জিম্মাদারবৃন্দ</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">আমীর</label>
+                <div style="font-weight: 600;">{{ gasht.amir.name }}</div>
+            </div>
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">রাহবার</label>
+                <div style="font-weight: 600;">{{ gasht.rahbar.name }}</div>
+            </div>
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">মুতাকাল্লিম</label>
+                <div style="font-weight: 600;">{{ gasht.mutakallim.name }}</div>
+            </div>
+        </div>
+
+        <h3 style="font-family: 'Outfit'; font-size: 1.1rem; margin-bottom: 1rem;">মন্তব্য ও ফলাফল</h3>
+        <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1.5rem; border-radius: 12px; min-height: 100px; color: #92400e; line-height: 1.6;">
+            {{ gasht.remarks|default:"কোন বিশেষ মন্তব্য নেই।"|linebreaks }}
+        </div>
+    </div>
+
+    <!-- Participants Sidebar -->
+    <div class="card">
+        <h3 style="font-family: 'Outfit'; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-users" style="color: var(--primary-color);"></i> অংশগ্রহণকারীদের তালিকা
+        </h3>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
+            <li style="display: flex; align-items: center; gap: 12px; padding: 10px; background: var(--primary-light); border-radius: 10px; color: var(--primary-dark); font-weight: 600;">
+                <div style="width: 32px; height: 32px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">A</div>
+                {{ gasht.amir.name }} (আমীর)
+            </li>
+            <li style="display: flex; align-items: center; gap: 12px; padding: 8px; border-bottom: 1px solid #f1f5f9;">
+                <div style="width: 32px; height: 32px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">R</div>
+                {{ gasht.rahbar.name }} (রাহবার)
+            </li>
+            <li style="display: flex; align-items: center; gap: 12px; padding: 8px; border-bottom: 1px solid #f1f5f9;">
+                <div style="width: 32px; height: 32px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">M</div>
+                {{ gasht.mutakallim.name }} (মুতাকাল্লিম)
+            </li>
+            {% for p in gasht.participants.all %}
+            <li style="display: flex; align-items: center; gap: 12px; padding: 8px; border-bottom: 1px solid #f1f5f9;">
+                <div style="width: 32px; height: 32px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">{{ p.name|slice:":1"|upper }}</div>
+                {{ p.name }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

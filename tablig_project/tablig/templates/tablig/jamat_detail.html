@@ -1,0 +1,74 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}জামাত বিস্তারিত - TabligApp{% endblock %}
+{% block header_title %}জামাত/চিল্লা বিস্তারিত{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'jamat_update' jamat.pk %}" class="btn btn-primary" style="background: var(--accent-color); color: #1e293b;">
+    <i class="fas fa-edit"></i> Edit Details
+</a>
+<a href="{% url 'jamat_delete' jamat.pk %}" class="btn" style="background: #fee2e2; color: #dc2626;">
+    <i class="fas fa-trash"></i> Delete
+</a>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+    <div class="card">
+        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 2rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1.5rem;">
+            <div style="width: 64px; height: 64px; background: var(--primary-light); color: var(--primary-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div>
+                <h2 style="font-family: 'Outfit'; margin-bottom: 4px;">{{ jamat.get_jamat_type_display }}</h2>
+                <div style="color: var(--primary-color); font-weight: 600;">Status: {{ jamat.status|title }}</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+            <div>
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">সদস্য</label>
+                <a href="{% url 'member_detail' jamat.member.pk %}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 36px; height: 36px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">{{ jamat.member.name|slice:":1" }}</div>
+                    <span style="font-weight: 600; font-size: 1.1rem;">{{ jamat.member.name }}</span>
+                </a>
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">গন্তব্য স্থান</label>
+                <div style="font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-location-arrow" style="color: var(--text-muted);"></i> {{ jamat.location|default:"অজানা" }}
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: #f8fafc; padding: 1.5rem; border-radius: 16px;">
+            <div>
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">শুরু তারিখ</label>
+                <div style="font-weight: 600;"><i class="fas fa-play-circle" style="color: #10b981;"></i> {{ jamat.start_date|date:"d F, Y" }}</div>
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">শেষ তারিখ</label>
+                <div style="font-weight: 600;"><i class="fas fa-stop-circle" style="color: #ef4444;"></i> {{ jamat.end_date|date:"d F, Y"|default:"চলমান / জানানো হয়নি" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Info / Sidebar -->
+    <div class="card" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; border: none;">
+        <h3 style="font-family: 'Outfit'; margin-bottom: 1.5rem;">সহায়ক তথ্য</h3>
+        <p style="font-size: 0.95rem; line-height: 1.6; opacity: 0.9; margin-bottom: 2rem;">
+            জামাআত চলাকালীন মেম্বারের সাথে নিয়মিত যোগাযোগ রাখা এবং তার পরিবারের খোঁজখবর নেয়া আমাদের দায়িত্ব। 
+        </p>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+            <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 4px;">সদস্যের ফোন</div>
+            <div style="font-weight: 600; font-size: 1.1rem;">{{ jamat.member.phone_number }}</div>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px;">
+            <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 4px;">এলাকা</div>
+            <div style="font-weight: 600; font-size: 1.1rem;">{{ jamat.member.area.name }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

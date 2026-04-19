@@ -23,46 +23,50 @@
 {% endblock %}
 
 {% block content %}
-<div class="card">
-    <table class="member-table">
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table class="member-table" style="margin: 0; border-spacing: 0;">
         <thead>
-            <tr>
-                <th>তারিখ</th>
-                <th>রুম</th>
-                <th>এলাকা</th>
-                <th>আমীর ও মুতাকাল্লিম</th>
-                <th>অংশগ্রহণকারী</th>
-                <th>অ্যাকশন</th>
+            <tr style="background: #f8fafc;">
+                <th style="padding: 1.2rem;">তারিখ</th>
+                <th style="padding: 1.2rem;">ধরণ</th>
+                <th style="padding: 1.2rem;">এলাকা</th>
+                <th style="padding: 1.2rem;">জিম্মাদার</th>
+                <th style="padding: 1.2rem;">অংশগ্রহণকারী</th>
+                <th style="padding: 1.2rem; text-align: right;">অ্যাকশন</th>
             </tr>
         </thead>
         <tbody>
             {% for gasht in gashts %}
-            <tr>
-                <td>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 1rem;">
                     <div style="font-weight: 700; color: var(--primary-color);">{{ gasht.date|date:"d" }}</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted);">{{ gasht.date|date:"M Y" }}</div>
                 </td>
-                <td>
+                <td style="padding: 1rem;">
                     <span class="type-badge badge-{{ gasht.gasht_type }}">{{ gasht.get_gasht_type_display }}</span>
                 </td>
-                <td style="font-weight: 600;">{{ gasht.area.name }}</td>
-                <td>
-                    <div style="font-size: 0.9rem;"><strong>আমীর:</strong> {{ gasht.amir.name|default:"-" }}</div>
-                    <div style="font-size: 0.9rem;"><strong>মুতাকাল্লিম:</strong> {{ gasht.mutakallim.name|default:"-" }}</div>
+                <td style="padding: 1rem; font-weight: 600;">{{ gasht.area.name }}</td>
+                <td style="padding: 1rem;">
+                    <div style="font-size: 0.9rem;"><strong>আমীর:</strong> {{ gasht.amir.name|default:"-"|truncatechars:15 }}</div>
+                    <div style="font-size: 0.9rem;"><strong>রাহবার:</strong> {{ gasht.rahbar.name|default:"-"|truncatechars:15 }}</div>
                 </td>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <i class="fas fa-users" style="color: var(--text-muted); font-size: 0.8rem;"></i>
-                        <span>{{ gasht.participants.count }} জন</span>
+                <td style="padding: 1rem;">
+                    <span style="background: #f1f5f9; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                        {{ gasht.participants.count|add:3 }} জন
+                    </span>
+                </td>
+                <td style="padding: 1rem; text-align: right;">
+                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="{% url 'gasht_detail' gasht.pk %}" class="btn" style="padding: 6px 10px; background: #f1f5f9; color: var(--primary-color);" title="দেখুন"><i class="fas fa-eye"></i></a>
+                        <a href="{% url 'gasht_update' gasht.pk %}" class="btn" style="padding: 6px 10px; background: #fffbeb; color: #b45309;" title="এডিট"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'gasht_delete' gasht.pk %}" class="btn" style="padding: 6px 10px; background: #fef2f2; color: #dc2626;" title="ডিলিট"><i class="fas fa-trash"></i></a>
                     </div>
-                </td>
-                <td>
-                    <button class="btn" style="padding: 5px 10px;"><i class="fas fa-eye"></i></button>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                <td colspan="6" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                    <i class="fas fa-walking" style="font-size: 3rem; margin-bottom: 1.5rem; display: block; opacity: 0.2;"></i>
                     এখনো কোন গাশতের রেকর্ড নেই।
                 </td>
             </tr>

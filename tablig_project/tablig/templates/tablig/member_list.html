@@ -81,48 +81,64 @@
 {% endblock %}
 
 {% block content %}
-<div class="card">
-    <table class="member-table">
+<!-- Search Section -->
+<div class="card" style="margin-bottom: 2rem; padding: 1rem;">
+    <form method="get" style="display: flex; gap: 10px;">
+        <div style="position: relative; flex: 1;">
+            <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+            <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="নাম, ফোন অথবা এলাকা লিখে সার্চ করুন..." 
+                   style="width: 100%; padding: 12px 12px 12px 45px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: inherit;">
+        </div>
+        <button type="submit" class="btn btn-primary">ফিল্টার করুন</button>
+        {% if request.GET.q %}
+        <a href="{% url 'member_list' %}" class="btn" style="background: #f1f5f9; color: var(--text-muted);">মুছে দিন</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table class="member-table" style="margin: 0; border-spacing: 0;">
         <thead>
-            <tr>
-                <th>নাম</th>
-                <th>ফোন নাম্বার</th>
-                <th>এলাকা (হালকা)</th>
-                <th>অবস্থা</th>
-                <th>যোগদানের তারিখ</th>
-                <th>অ্যাকশন</th>
+            <tr style="background: #f8fafc;">
+                <th style="padding: 1.2rem;">নাম</th>
+                <th style="padding: 1.2rem;">ফোন নাম্বার</th>
+                <th style="padding: 1.2rem;">এলাকা</th>
+                <th style="padding: 1.2rem;">অবস্থা</th>
+                <th style="padding: 1.2rem;">অ্যাকশন</th>
             </tr>
         </thead>
         <tbody>
             {% for member in members %}
-            <tr>
-                <td>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 1rem;">
                     <div class="name-col">
                         <div class="avatar">{{ member.name|slice:":1"|upper }}</div>
                         <div>
                             <div style="font-weight: 600;">{{ member.name }}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ member.address|default:"ঠিকানা নেই" }}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ member.address|default:"ঠিকানা নেই"|truncatechars:30 }}</div>
                         </div>
                     </div>
                 </td>
-                <td>{{ member.phone_number }}</td>
-                <td>{{ member.area.name|default:"-" }}</td>
-                <td>
+                <td style="padding: 1rem;">{{ member.phone_number }}</td>
+                <td style="padding: 1rem;">{{ member.area.name|default:"-" }}</td>
+                <td style="padding: 1rem;">
                     <span class="status-badge status-{{ member.status }}">
                         {{ member.get_status_display }}
                     </span>
                 </td>
-                <td>{{ member.created_at|date:"d M Y" }}</td>
-                <td>
-                    <button class="btn" style="padding: 5px 10px; color: var(--text-muted);"><i class="fas fa-edit"></i></button>
-                    <button class="btn" style="padding: 5px 10px; color: #ef4444;"><i class="fas fa-trash"></i></button>
+                <td style="padding: 1rem;">
+                    <div style="display: flex; gap: 8px;">
+                        <a href="{% url 'member_detail' member.pk %}" class="btn" style="padding: 6px 10px; background: #f1f5f9; color: var(--primary-color);" title="দেখুন"><i class="fas fa-eye"></i></a>
+                        <a href="{% url 'member_update' member.pk %}" class="btn" style="padding: 6px 10px; background: #fffbeb; color: #b45309;" title="এডিট"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'member_delete' member.pk %}" class="btn" style="padding: 6px 10px; background: #fef2f2; color: #dc2626;" title="ডিলিট"><i class="fas fa-trash"></i></a>
+                    </div>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                    <i class="fas fa-user-slash" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
-                    কোন সদস্য পাওয়া যায়নি। নতুন সদস্য যোগ করুন।
+                <td colspan="5" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                    <i class="fas fa-user-slash" style="font-size: 3.5rem; margin-bottom: 1.5rem; display: block; opacity: 0.2;"></i>
+                    <div style="font-size: 1.1rem; font-weight: 500;">কোন তথ্য পাওয়া যায়নি।</div>
                 </td>
             </tr>
             {% endfor %}

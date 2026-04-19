@@ -17,36 +17,62 @@
 {% endblock %}
 
 {% block content %}
-<div class="card">
-    <table class="member-table">
+<!-- Search Section -->
+<div class="card" style="margin-bottom: 2rem; padding: 1rem;">
+    <form method="get" style="display: flex; gap: 10px;">
+        <div style="position: relative; flex: 1;">
+            <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+            <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="বিভাগ, মেম্বার অথবা বর্ণনা লিখে সার্চ করুন..." 
+                   style="width: 100%; padding: 12px 12px 12px 45px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: inherit;">
+        </div>
+        <button type="submit" class="btn btn-primary">ফিল্টার করুন</button>
+        {% if request.GET.q %}
+        <a href="{% url 'finance_list' %}" class="btn" style="background: #f1f5f9; color: var(--text-muted);">মুছে দিন</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table class="member-table" style="margin: 0; border-spacing: 0;">
         <thead>
-            <tr>
-                <th>তারিখ</th>
-                <th>ধরণ</th>
-                <th>বিভাগ</th>
-                <th>পরিমান</th>
-                <th>মন্তব্য</th>
+            <tr style="background: #f8fafc;">
+                <th style="padding: 1.2rem;">তারিখ</th>
+                <th style="padding: 1.2rem;">ধরণ</th>
+                <th style="padding: 1.2rem;">বিভাগ/মেম্বার</th>
+                <th style="padding: 1.2rem;">পরিমান</th>
+                <th style="padding: 1.2rem; text-align: right;">অ্যাকশন</th>
             </tr>
         </thead>
         <tbody>
             {% for record in finances %}
-            <tr>
-                <td>{{ record.date|date:"d M Y" }}</td>
-                <td>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 1rem;">{{ record.date|date:"d M Y" }}</td>
+                <td style="padding: 1rem;">
                     <span class="status-badge {% if record.type == 'income' %}status-active{% else %}status-inactive{% endif %}">
                         {{ record.get_type_display }}
                     </span>
                 </td>
-                <td>{{ record.category }}</td>
-                <td class="amount-{{ record.type }}">
+                <td style="padding: 1rem;">
+                    <div style="font-weight: 600;">{{ record.category }}</div>
+                    {% if record.member %}
+                    <div style="font-size: 0.8rem; color: var(--text-muted);"><i class="fas fa-user"></i> {{ record.member.name }}</div>
+                    {% endif %}
+                </td>
+                <td style="padding: 1rem;" class="amount-{{ record.type }}">
                     {% if record.type == 'income' %}+{% else %}-{% endif %} {{ record.amount }} ৳
                 </td>
-                <td>{{ record.description|truncatechars:30 }}</td>
+                <td style="padding: 1rem; text-align: right;">
+                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="{% url 'finance_update' record.pk %}" class="btn" style="padding: 6px 10px; background: #fffbeb; color: #b45309;" title="এডিট"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'finance_delete' record.pk %}" class="btn" style="padding: 6px 10px; background: #fef2f2; color: #dc2626;" title="ডিলিট"><i class="fas fa-trash"></i></a>
+                    </div>
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                    এখনো কোনো লেনদেনের রেকর্ড নেই।
+                <td colspan="5" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                    <i class="fas fa-hand-holding-heart" style="font-size: 3rem; margin-bottom: 1.5rem; display: block; opacity: 0.2;"></i>
+                    কোন লেনদেন পাওয়া যায়নি।
                 </td>
             </tr>
             {% endfor %}

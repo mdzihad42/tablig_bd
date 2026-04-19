@@ -1,0 +1,28 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}মুছে ফেলুন - TabligApp{% endblock %}
+{% block header_title %}তথ্য মুছে ফেলা নিশ্চিত করুন{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 2rem auto; text-align: center; padding: 3rem;">
+    <div style="font-size: 4rem; color: #ef4444; margin-bottom: 1.5rem;">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h2 style="font-family: 'Outfit'; margin-bottom: 1rem;">আপনি কি নিশ্চিত?</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">
+        আপনি এই তথ্যটি স্থায়ীভাবে মুছে ফেলতে চাচ্ছেন। মুছে ফেলা তথ্য আর ফিরে পাওয়া যাবে না।
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="javascript:history.back()" class="btn" style="background: #e2e8f0; color: #475569;">
+                <i class="fas fa-times"></i> ফিরে যান
+            </a>
+            <button type="submit" class="btn" style="background: #ef4444; color: white;">
+                <i class="fas fa-trash-alt"></i> হ্যাঁ, মুছে ফেলুন
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

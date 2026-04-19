@@ -1,0 +1,95 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}{{ member.name }} - বিস্তারিত{% endblock %}
+{% block header_title %}সদস্য প্রোফাইল{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'member_update' member.pk %}" class="btn btn-primary" style="background: var(--accent-color); color: #1e293b;">
+    <i class="fas fa-edit"></i> Edit Profile
+</a>
+<a href="{% url 'member_delete' member.pk %}" class="btn" style="background: #fee2e2; color: #dc2626;">
+    <i class="fas fa-trash"></i> Delete
+</a>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 350px 1fr; gap: 2rem;">
+    <!-- Profile Card -->
+    <div class="card" style="text-align: center;">
+        <div style="width: 120px; height: 120px; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 700; margin: 0 auto 1.5rem; border: 4px solid var(--white); box-shadow: var(--shadow);">
+            {{ member.name|slice:":1"|upper }}
+        </div>
+        <h2 style="font-family: 'Outfit'; font-size: 1.5rem; margin-bottom: 0.5rem;">{{ member.name }}</h2>
+        <div style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: {% if member.status == 'active' %}#dcfce7; color: #166534{% else %}#fee2e2; color: #991b1b{% endif %}; margin-bottom: 1.5rem;">
+            {{ member.get_status_display }}
+        </div>
+
+        <div style="text-align: left; border-top: 1px solid #f1f5f9; padding-top: 1.5rem;">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">ফোন নাম্বার</label>
+                <div style="font-weight: 500;">{{ member.phone_number }}</div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">এলাকা</label>
+                <div style="font-weight: 500;">{{ member.area.name|default:"-" }}</div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">ঠিকানা</label>
+                <div style="font-weight: 500; font-size: 0.9rem;">{{ member.address|default:"-" }}</div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">যুক্ত হয়েছেন</label>
+                <div style="font-weight: 500; font-size: 0.9rem;">{{ member.created_at|date:"d F, Y" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats & History -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <div class="card" style="padding: 1rem; text-align: center; border-left: 4px solid #3b82f6;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">মোট গাশত</div>
+                <div style="font-size: 1.5rem; font-weight: 700; font-family: 'Outfit';">{{ member.participated_gashts.count }} বার</div>
+            </div>
+            <div class="card" style="padding: 1rem; text-align: center; border-left: 4px solid #8b5cf6;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">জামাআতে সময়</div>
+                <div style="font-size: 1.5rem; font-weight: 700; font-family: 'Outfit';">{{ member.jamats.count }} বার</div>
+            </div>
+            <div class="card" style="padding: 1rem; text-align: center; border-left: 4px solid #10b981;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">তালিম সেশন</div>
+                <div style="font-size: 1.5rem; font-weight: 700; font-family: 'Outfit';">{{ member.talims_attended.count }} বার</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="font-family: 'Outfit'; margin-bottom: 1rem;">সাম্প্রতিক জামাতসমূহ</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 1px solid #f1f5f9;">
+                        <th style="padding: 10px 0; color: var(--text-muted); font-size: 0.85rem;">ধরণ</th>
+                        <th style="padding: 10px 0; color: var(--text-muted); font-size: 0.85rem;">স্থান</th>
+                        <th style="padding: 10px 0; color: var(--text-muted); font-size: 0.85rem;">শুরু</th>
+                        <th style="padding: 10px 0; color: var(--text-muted); font-size: 0.85rem;">অবস্থা</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jamat in member.jamats.all|slice:":5" %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 12px 0; font-weight: 500;">{{ jamat.get_jamat_type_display }}</td>
+                        <td style="padding: 12px 0; font-size: 0.9rem;">{{ jamat.location|default:"-" }}</td>
+                        <td style="padding: 12px 0; font-size: 0.9rem;">{{ jamat.start_date|date:"d M, Y" }}</td>
+                        <td style="padding: 12px 0;">
+                            <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; background: #f1f5f9;">{{ jamat.status|title }}</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">কোন তথ্য নেই</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
