@@ -135,9 +135,11 @@
     </div>
 
     <!-- Chart Card -->
-    <div class="card">
+    <div class="card" style="display: flex; flex-direction: column;">
         <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">জামাআত বিভাজন</h2>
-        <canvas id="jamatChart" height="250"></canvas>
+        <div style="flex: 1; min-height: 250px; position: relative;">
+            <canvas id="jamatChart"></canvas>
+        </div>
     </div>
 </div>
 
