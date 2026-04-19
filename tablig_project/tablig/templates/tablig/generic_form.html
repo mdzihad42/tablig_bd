@@ -107,4 +107,28 @@
         background-color: white;
     }
 </style>
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFields = document.querySelectorAll('input[type="text"]');
+        dateFields.forEach(field => {
+            const name = field.getAttribute('name');
+            if (name && name.toLowerCase().includes('date')) {
+                field.type = 'date';
+                if (field.value) {
+                    try {
+                        const d = new Date(field.value);
+                        if (!isNaN(d.getTime())) {
+                            const year = d.getFullYear();
+                            const month = String(d.getMonth() + 1).padStart(2, '0');
+                            const day = String(d.getDate()).padStart(2, '0');
+                            field.value = `${year}-${month}-${day}`;
+                        }
+                    } catch (e) {}
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
 {% endblock %}
