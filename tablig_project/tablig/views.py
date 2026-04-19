@@ -53,7 +53,7 @@ class MemberListView(LoginRequiredMixin, ListView):
 
 class MemberCreateView(LoginRequiredMixin, CreateView):
     model = Member
-    template_name = 'tablig/member_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['name', 'phone_number', 'area', 'address', 'status']
     success_url = reverse_lazy('member_list')
 
@@ -64,7 +64,7 @@ class MemberDetailView(LoginRequiredMixin, DetailView):
 
 class MemberUpdateView(LoginRequiredMixin, UpdateView):
     model = Member
-    template_name = 'tablig/member_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['name', 'phone_number', 'area', 'address', 'status']
     success_url = reverse_lazy('member_list')
 
@@ -92,7 +92,7 @@ class AreaDetailView(LoginRequiredMixin, DetailView):
 
 class AreaUpdateView(LoginRequiredMixin, UpdateView):
     model = Area
-    template_name = 'tablig/area_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['name', 'description']
     success_url = reverse_lazy('area_list')
 
@@ -120,7 +120,7 @@ class GashtDetailView(LoginRequiredMixin, DetailView):
 
 class GashtUpdateView(LoginRequiredMixin, UpdateView):
     model = Gasht
-    template_name = 'tablig/gasht_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['date', 'gasht_type', 'area', 'amir', 'rahbar', 'mutakallim', 'participants', 'remarks']
     success_url = reverse_lazy('gasht_list')
 
@@ -137,13 +137,13 @@ class TalimListView(LoginRequiredMixin, ListView):
 
 class TalimCreateView(LoginRequiredMixin, CreateView):
     model = Talim
-    template_name = 'tablig/talim_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['date', 'book_name', 'topic', 'performed_by', 'participants', 'notes']
     success_url = reverse_lazy('talim_list')
 
 class TalimUpdateView(LoginRequiredMixin, UpdateView):
     model = Talim
-    template_name = 'tablig/talim_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['date', 'book_name', 'topic', 'performed_by', 'participants', 'notes']
     success_url = reverse_lazy('talim_list')
 
@@ -168,13 +168,13 @@ class FinanceListView(LoginRequiredMixin, ListView):
 
 class FinanceCreateView(LoginRequiredMixin, CreateView):
     model = Finance
-    template_name = 'tablig/finance_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['type', 'amount', 'category', 'date', 'description', 'member']
     success_url = reverse_lazy('finance_list')
 
 class FinanceUpdateView(LoginRequiredMixin, UpdateView):
     model = Finance
-    template_name = 'tablig/finance_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['type', 'amount', 'category', 'date', 'description', 'member']
     success_url = reverse_lazy('finance_list')
 
@@ -191,7 +191,7 @@ class JamatListView(LoginRequiredMixin, ListView):
 
 class JamatCreateView(LoginRequiredMixin, CreateView):
     model = Jamat
-    template_name = 'tablig/jamat_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['member', 'jamat_type', 'start_date', 'end_date', 'status', 'location']
     success_url = reverse_lazy('jamat_list')
 
@@ -202,7 +202,7 @@ class JamatDetailView(LoginRequiredMixin, DetailView):
 
 class JamatUpdateView(LoginRequiredMixin, UpdateView):
     model = Jamat
-    template_name = 'tablig/jamat_form.html'
+    template_name = 'tablig/generic_form.html'
     fields = ['member', 'jamat_type', 'start_date', 'end_date', 'status', 'location']
     success_url = reverse_lazy('jamat_list')
 

@@ -92,17 +92,58 @@
         </div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon" style="background: #FCE7F3; color: #9D174D;"><i class="fas fa-wallet"></i></div>
+        <div class="stat-icon" style="background: #DCFCE7; color: #166534;"><i class="fas fa-wallet"></i></div>
         <div class="stat-info">
-            <h3>মোট জমা</h3>
-            <div>{{ total_finance }} ৳</div>
+            <h3>বর্তমান ব্যালেন্স</h3>
+            <div>{{ net_balance }} ৳</div>
         </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
+    <!-- Recent Activities -->
+    <div class="card">
+        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">সাম্প্রতিক গাশত</h2>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 1px solid #f1f5f9;">
+                        <th style="padding: 10px; color: var(--text-muted); font-size: 0.8rem;">তারিখ</th>
+                        <th style="padding: 10px; color: var(--text-muted); font-size: 0.8rem;">এলাকা</th>
+                        <th style="padding: 10px; color: var(--text-muted); font-size: 0.8rem;">ধরণ</th>
+                        <th style="padding: 10px; color: var(--text-muted); font-size: 0.8rem;">অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gasht in recent_gashts %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 12px 10px;">{{ gasht.date|date:"d M" }}</td>
+                        <td style="padding: 12px 10px; font-weight: 500;">{{ gasht.area.name }}</td>
+                        <td style="padding: 12px 10px;">
+                            <span style="font-size: 0.75rem; background: #f1f5f9; padding: 2px 8px; border-radius: 10px;">{{ gasht.get_gasht_type_display }}</span>
+                        </td>
+                        <td style="padding: 12px 10px;">
+                            <a href="{% url 'gasht_detail' gasht.pk %}" style="color: var(--primary-color);"><i class="fas fa-arrow-right"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-muted);">তথ্য নেই</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chart Card -->
+    <div class="card">
+        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">জামাআত বিভাজন</h2>
+        <canvas id="jamatChart" height="250"></canvas>
     </div>
 </div>
 
 <div class="recent-grid">
     <div class="card">
-        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">সাম্প্রতিক সদস্য</h2>
+        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">নতুন সদস্য</h2>
         {% for member in recent_members %}
         <div class="recent-item">
             <div class="avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">{{ member.name|slice:":1"|upper }}</div>
@@ -110,32 +151,67 @@
                 <div style="font-weight: 600; font-size: 0.95rem;">{{ member.name }}</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">{{ member.area.name }}</div>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ member.created_at|timesince }} আগে</div>
+            <div style="text-align: right;">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ member.created_at|timesince }} আগে</div>
+                <a href="{% url 'member_detail' member.pk %}" style="font-size: 0.7rem; color: var(--primary-color); text-decoration: none;">বিস্তারিত</a>
+            </div>
         </div>
         {% empty %}
         <p style="color: var(--text-muted); text-align: center; padding: 1rem;">কোন তথ্য নেই</p>
         {% endfor %}
-        <a href="{% url 'member_list' %}" style="display: block; text-align: center; margin-top: 1rem; color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.9rem;">সব দেখুন</a>
     </div>
 
-    <div class="card">
-        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1.5rem;">সাম্প্রতিক গাশত</h2>
-        {% for gasht in recent_gashts %}
-        <div class="recent-item">
-            <div class="stat-icon icon-gashts" style="width: 36px; height: 36px; font-size: 0.9rem;"><i class="fas fa-walking"></i></div>
-            <div style="flex: 1;">
-                <div style="font-weight: 600; font-size: 0.95rem;">{{ gasht.get_gasht_type_display }}</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">{{ gasht.area.name }}</div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-size: 0.85rem; font-weight: 500;">{{ gasht.date|date:"d M" }}</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ gasht.amir.name|slice:":10" }}...</div>
-            </div>
+    <div class="card" style="background: var(--primary-color); color: white;">
+        <h2 style="font-family: 'Outfit'; font-size: 1.25rem; margin-bottom: 1rem; color: white;">কুইক একশন</h2>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 1.5rem;">অ্যাপটি নিয়মিত ব্যবহার করে আপনার এলাকার তাবলিগের মেহনত আরও সুশৃঙ্খল করুন।</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <a href="{% url 'gasht_create' %}" class="btn" style="background: rgba(255,255,255,0.2); color: white; justify-content: center; font-size: 0.85rem;">
+                <i class="fas fa-plus"></i> গাশত এন্ট্রি
+            </a>
+            <a href="{% url 'finance_create' %}" class="btn" style="background: rgba(255,255,255,0.2); color: white; justify-content: center; font-size: 0.85rem;">
+                <i class="fas fa-plus"></i> ফান্ড এন্ট্রি
+            </a>
+            <a href="{% url 'jamat_create' %}" class="btn" style="background: rgba(255,255,255,0.2); color: white; justify-content: center; font-size: 0.85rem;">
+                <i class="fas fa-plus"></i> জামাত এন্ট্রি
+            </a>
+            <a href="{% url 'member_create' %}" class="btn" style="background: rgba(255,255,255,0.2); color: white; justify-content: center; font-size: 0.85rem;">
+                <i class="fas fa-plus"></i> সদস্য যোগ
+            </a>
         </div>
-        {% empty %}
-        <p style="color: var(--text-muted); text-align: center; padding: 1rem;">কোন তথ্য নেই</p>
-        {% endfor %}
-        <a href="{% url 'gasht_list' %}" style="display: block; text-align: center; margin-top: 1rem; color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.9rem;">সব দেখুন</a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('jamatChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ jamat_labels|safe }},
+            datasets: [{
+                data: {{ jamat_counts|safe }},
+                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: { family: 'Inter', size: 12 }
+                    }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%'
+        }
+    });
+</script>
 {% endblock %}
