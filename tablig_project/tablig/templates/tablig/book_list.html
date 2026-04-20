@@ -33,16 +33,26 @@
     .book-cover {
         width: 100%;
         aspect-ratio: 2/3;
-        background: #f1f5f9;
+        background: linear-gradient(135deg, #2E7D32, #1B5E20);
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        color: white;
+        text-align: center;
+        padding: 1rem;
     }
-    .book-cover img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    .book-cover i {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.8;
+    }
+    .book-cover span {
+        font-family: 'Outfit';
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
     }
     .book-info {
         padding: 1rem;
@@ -96,9 +106,11 @@
     <div class="book-card">
         <div class="book-cover">
             {% if book.cover_image %}
-            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100%; object-fit: cover;">
             {% else %}
-            <i class="fas fa-book" style="font-size: 3rem; color: var(--text-muted);"></i>
+            <i class="fas fa-book"></i>
+            <span>KITAB</span>
+            <div style="font-size: 0.65rem; margin-top: 10px; opacity: 0.9;">{{ book.title }}</div>
             {% endif %}
         </div>
         <div class="book-info">
