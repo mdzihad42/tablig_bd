@@ -1,0 +1,102 @@
+{% extends 'tablig/base.html' %}
+
+{% block title %}{{ book.title }} - Boi Ghor{% endblock %}
+{% block header_title %}বইয়ের বিস্তারিত{% endblock %}
+
+{% block header_actions %}
+<div style="display: flex; gap: 0.5rem;">
+    <a href="{% url 'book_update' book.pk %}" class="btn" style="background: #e2e8f0; color: var(--text-main);">
+        <i class="fas fa-edit"></i> পরিবর্তন করুন
+    </a>
+    <a href="{% url 'book_delete' book.pk %}" class="btn" style="background: #fee2e2; color: #b91c1c;">
+        <i class="fas fa-trash"></i> মুছে ফেলুন
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+    }
+    @media (max-width: 768px) {
+        .detail-grid { grid-template-columns: 1fr; }
+    }
+    .cover-container {
+        width: 100%;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        border: 1px solid #f1f5f9;
+        background: #f1f5f9;
+    }
+    .cover-container img {
+        width: 100%;
+        display: block;
+    }
+    .meta-item {
+        margin-bottom: 1.5rem;
+    }
+    .meta-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+    .meta-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    .description {
+        line-height: 1.6;
+        color: var(--text-main);
+        white-space: pre-wrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-grid">
+    <div class="cover-container">
+        {% if book.cover_image %}
+        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+        {% else %}
+        <div style="aspect-ratio: 2/3; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-book" style="font-size: 5rem; color: var(--text-muted);"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="meta-item">
+            <h2 style="font-family: 'Outfit'; font-size: 2rem; margin-bottom: 0.5rem;">{{ book.title }}</h2>
+            <div class="meta-value" style="color: var(--primary-color);">{{ book.author|default:"অজানা লেখক" }}</div>
+        </div>
+
+        <div class="meta-item">
+            <div class="meta-label">বইটির সারসংক্ষেপ</div>
+            <div class="description">
+                {{ book.description|default:"এই বইটির কোন বর্ণনা দেওয়া হয়নি।" }}
+            </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; display: flex; gap: 1rem; align-items: center; padding-top: 1.5rem; border-top: 1px solid #f1f5f9;">
+            {% if book.pdf_file %}
+            <a href="{{ book.pdf_file.url }}" class="btn btn-primary" target="_blank" style="padding: 12px 30px; font-size: 1rem;">
+                <i class="fas fa-file-pdf"></i> ফাইলটি পড়ুন / ডাউনলোড করুন
+            </a>
+            {% else %}
+            <div style="padding: 12px 20px; background: #f8fafc; border-radius: var(--radius); color: var(--text-muted); font-size: 0.9rem;">
+                <i class="fas fa-exclamation-triangle"></i> এই বইটির কোন PDF ফাইল আপলোড করা হয়নি।
+            </div>
+            {% endif %}
+            <a href="{% url 'book_list' %}" style="text-decoration: none; color: var(--text-muted); font-weight: 500;">
+                <i class="fas fa-arrow-left"></i> তালিকা ফিরে যান
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

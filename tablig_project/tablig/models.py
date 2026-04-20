@@ -84,3 +84,14 @@ class Jamat(models.Model):
 
     def __str__(self):
         return f"{self.member.name} - {self.get_jamat_type_display()}"
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
+    pdf_file = models.FileField(upload_to='books_pdf/', blank=True, null=True)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

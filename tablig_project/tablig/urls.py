@@ -6,7 +6,8 @@ from .views import (
     GashtListView, GashtCreateView, GashtDetailView, GashtUpdateView, GashtDeleteView,
     TalimListView, TalimCreateView, TalimUpdateView, TalimDeleteView,
     FinanceListView, FinanceCreateView, FinanceUpdateView, FinanceDeleteView,
-    JamatListView, JamatCreateView, JamatDetailView, JamatUpdateView, JamatDeleteView
+    JamatListView, JamatCreateView, JamatDetailView, JamatUpdateView, JamatDeleteView,
+    BookListView, BookCreateView, BookDetailView, BookUpdateView, BookDeleteView
 )
 
 urlpatterns = [
@@ -51,4 +52,11 @@ urlpatterns = [
     path('jamat/<int:pk>/', JamatDetailView.as_view(), name='jamat_detail'),
     path('jamat/<int:pk>/edit/', JamatUpdateView.as_view(), name='jamat_update'),
     path('jamat/<int:pk>/delete/', JamatDeleteView.as_view(), name='jamat_delete'),
+
+    # Book URLs
+    path('books/', BookListView.as_view(), name='book_list'),
+    path('books/add/', BookCreateView.as_view(), name='book_create'),
+    path('books/<int:pk>/', BookDetailView.as_view(), name='book_detail'),
+    path('books/<int:pk>/edit/', BookUpdateView.as_view(), name='book_update'),
+    path('books/<int:pk>/delete/', BookDeleteView.as_view(), name='book_delete'),
 ]

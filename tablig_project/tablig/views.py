@@ -4,7 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Sum
-from .models import Member, Area, Gasht, Talim, Finance, Jamat
+from .models import Member, Area, Gasht, Talim, Finance, Jamat, Book
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'tablig/dashboard.html'
@@ -14,6 +14,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['total_members'] = Member.objects.count()
         context['total_areas'] = Area.objects.count()
         context['total_gashts'] = Gasht.objects.count()
+        context['total_books'] = Book.objects.count()
         
         income = Finance.objects.filter(type='income').aggregate(Sum('amount'))['amount__sum'] or 0
         expense = Finance.objects.filter(type='expense').aggregate(Sum('amount'))['amount__sum'] or 0
@@ -210,3 +211,39 @@ class JamatDeleteView(LoginRequiredMixin, DeleteView):
     model = Jamat
     template_name = 'tablig/confirm_delete.html'
     success_url = reverse_lazy('jamat_list')
+
+# Book Views (Boi Ghor)
+class BookListView(LoginRequiredMixin, ListView):
+    model = Book
+    template_name = 'tablig/book_list.html'
+    context_object_name = 'books'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Book.objects.filter(
+                Q(title__icontains=query) | Q(author__icontains=query) | Q(description__icontains=query)
+            )
+        return Book.objects.all()
+
+class BookCreateView(LoginRequiredMixin, CreateView):
+    model = Book
+    template_name = 'tablig/generic_form.html'
+    fields = ['title', 'author', 'description', 'cover_image', 'pdf_file']
+    success_url = reverse_lazy('book_list')
+
+class BookDetailView(LoginRequiredMixin, DetailView):
+    model = Book
+    template_name = 'tablig/book_detail.html'
+    context_object_name = 'book'
+
+class BookUpdateView(LoginRequiredMixin, UpdateView):
+    model = Book
+    template_name = 'tablig/generic_form.html'
+    fields = ['title', 'author', 'description', 'cover_image', 'pdf_file']
+    success_url = reverse_lazy('book_list')
+
+class BookDeleteView(LoginRequiredMixin, DeleteView):
+    model = Book
+    template_name = 'tablig/confirm_delete.html'
+    success_url = reverse_lazy('book_list')

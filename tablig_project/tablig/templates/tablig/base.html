@@ -214,6 +214,12 @@
                         <span>চাঁদা / ফান্ড</span>
                     </a>
                 </li>
+                <li class="nav-item {% if 'books' in request.path %}active{% endif %}">
+                    <a href="{% url 'book_list' %}">
+                        <i class="fas fa-book-reader"></i>
+                        <span>বই ঘর</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
