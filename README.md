@@ -1,7 +1,7 @@
 # Tablig Management System (Tablig BD)
 
 A comprehensive Django-based management system designed to track and organize Tablig activities. This system helps in managing members, areas, religious activities (Gasht, Talim), financial records, and Jamat schedules.
-notun item jog hobe 
+
 ## 🚀 Features
 
 - **Member Management**: Track active and inactive members with detailed profiles.
